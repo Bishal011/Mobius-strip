@@ -1,5 +1,11 @@
 # Mobius-strip
 
+
+### 3D plot  
+
+![Screenshot 2025-05-27 092102](https://github.com/user-attachments/assets/5612bf93-58dc-4541-bdc4-d77387840a1b)
+
+
 ### How you structured the code
 
 ---
@@ -51,5 +57,77 @@ Renders a 3D plot using `matplotlib` for visual verification of the modeled Möb
 For testing the class: instantiates an object, prints computed values, and shows the plot.
 
 ---
+###  How I Approximated the Surface Area:
 
-This clean object-oriented structure ensures modularity, readability, and easy expansion.
+---
+
+#### Step 1: Parametric Surface
+
+The Möbius strip is defined parametrically as:
+
+* $x(u,v), y(u,v), z(u,v)$
+* With parameters $u \in [0, 2\pi],\ v \in [-w/2, w/2]$
+
+---
+
+#### Step 2: Compute Partial Derivatives
+
+Numerically compute:
+
+
+* Done using `np.gradient()` on meshgrid arrays $X, Y, Z$
+
+---
+
+#### Step 3: Cross Product of Tangents
+
+Surface element $dS$ is the magnitude of:
+
+
+---
+
+#### Step 4: Numerical Integration
+
+Apply **Simpson’s Rule** twice (along `v` then `u`) using `scipy.integrate.simpson`:
+
+```python
+area = simpson(simpson(dS, v), u)
+```
+
+---
+### Challenges Faced
+
+---
+
+#### 1. Handling `scipy` Import Errors
+
+* Initially used `simps` (deprecated in newer versions).
+* Fixed by switching to `simpson` from `scipy.integrate`.
+
+---
+
+#### 2. Numerical Stability
+
+* Computing partial derivatives with `np.gradient()` needed a sufficiently high resolution (`n ≥ 100`) for accurate surface area.
+* Low `n` values led to jagged surfaces and poor area estimates.
+
+---
+
+#### 3. Edge Calculation
+
+* Boundary curve is not trivial due to twisting.
+* Required evaluating the parametric equations at `v = ±w/2` and applying numerical differentiation carefully.
+
+---
+
+#### 4. Visualization Orientation
+
+* Plotting the Möbius strip needed tuning `matplotlib`’s 3D projection for clarity (especially for wide strips).
+
+---
+
+#### 5. Mesh Symmetry
+
+* Mesh grid generation had to respect the non-orientable nature of the Möbius strip to avoid visual artifacts or mismatched derivatives.
+
+
